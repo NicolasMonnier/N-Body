@@ -17,4 +17,4 @@ test -x ${NAME} || exit -1
 
 echo "Run"
 #srun --label --mpi=pmi2 -J TPMPI -N 1 -n $N -p E52650v3_htoff_mofed24 --reservation=stagetp ./${NAME} | dshbak -c
-./${NAME} #| dshbak -c
+./${NAME} nbody_input.json #| dshbak -c

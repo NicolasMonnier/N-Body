@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <omp.h>
 
+#include <json-c/json.h>
+
 #include "toy_nBody.h"
 
 #ifndef SIZE
@@ -49,7 +51,7 @@ void compute()
 //#pragma omp parallel private(i)
 //{
 
-  #pragma omp parallel for private(j, ax, ay, az) schedule(static)
+  #pragma omp parallel for private(j, ax, ay, az) 
   for (i = my_start[0]; i < my_end[0]; i++)// update velocity
     {
       for (j = 0; j < SIZE; j++)
@@ -132,15 +134,58 @@ void update()
   }
 }
 
+void read_json_file(char *filename, float *x0, float *y0, float *z0, float *vx0, float *vy0, float *vz0, float *mass0)
+{
+    FILE *fp;
+    //char *buffer = malloc(1024 * sizeof(char));
+    char buffer[1024];
+    struct json_object *parsed_json;
+    struct json_object *x;
+    struct json_object *y;
+    struct json_object *z;
+    struct json_object *vx;
+    struct json_object *vy;
+    struct json_object *vz;
+    struct json_object *mass;
 
-static void init_objects()
+    fp = fopen(filename, "r");
+    fread(buffer, 1024, 1, fp);
+    fclose(fp);
+
+    parsed_json = json_tokener_parse(buffer);
+
+    json_object_object_get_ex(parsed_json, "x", &x);
+    json_object_object_get_ex(parsed_json, "y", &y);
+    json_object_object_get_ex(parsed_json, "z", &z);
+    json_object_object_get_ex(parsed_json, "vx", &vx);
+    json_object_object_get_ex(parsed_json, "vy", &vy);
+    json_object_object_get_ex(parsed_json, "vz", &vz);
+    json_object_object_get_ex(parsed_json, "mass", &mass);
+
+    *x0 = json_object_get_double(x);
+    *y0 = json_object_get_double(y);
+    *z0 = json_object_get_double(z);
+    *vx0 = json_object_get_double(vx);
+    *vy0 = json_object_get_double(vy);
+    *vz0 = json_object_get_double(vz);
+    *mass0 = json_object_get_double(mass);
+
+    //free(buffer);
+}
+
+
+static void init_objects(char *filename)
 {
 
   int i = 0;
+  float x0, y0, z0, vx0, vy0, vz0, mass0;
+
+  read_json_file(filename, &x0, &y0, &z0, &vx0, &vy0, &vz0, &mass0);
+
 
    //srand((unsigned int)time(NULL)); 
   printf("RAND_MAX = %d ", RAND_MAX);
-  for (i = 0; i < SIZE; ++i)
+  for (i = 1; i < SIZE; ++i)
     {
       objects[i].x = init_array[i][0];
       objects[i].y = init_array[i][1];
@@ -191,12 +236,14 @@ static struct Object crc(void)
 
 int main(int argc, char* argv[])
 {
-  x = 2000;
+  x = 200;
   int i = 0;
 
+
+  char *mystring = argv[1];
   
   //master initialize meanv, x and objects 
-  init_objects();
+  init_objects(mystring);
 
 
   printf("starting simulation for %d frames...\n", x);
@@ -219,13 +266,21 @@ int main(int argc, char* argv[])
     {
       update();
     }
-  
+
+
+
   //master print the CRC
   printf("simulation finished\n");
   struct Object crcr = crc();     
-  {
-    printf("crc ERROR =%g %g %g %g %g %g %g\n", crcr.x, crcr.y, crcr.y, crcr.vx, crcr.vy, crcr.vz, meanv);
-  }
+  //{
+  //  printf("crc ERROR =%g %g %g %g %g %g %g\n", crcr.x, crcr.y, crcr.y, crcr.vx, crcr.vy, crcr.vz, meanv);
+  //}
 
+  FILE *fpout;
+  fpout = fopen("output.csv", "w");
+  const char *header ="x y z vx vy vz";
+  fprintf(fpout, "%s\n", header);
+  fprintf(fpout, "%g %g %g %g %g %g\n", crcr.x, crcr.y, crcr.y, crcr.vx, crcr.vy, crcr.vz);
+  fclose(fpout);
   return 0;
 }

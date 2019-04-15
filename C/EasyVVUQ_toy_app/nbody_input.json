@@ -1,0 +1,18 @@
+{
+    "app": {
+        "input_encoder": "generic_template",
+        "output_decoder": "csv",
+        "template": "nbody.template",
+        "input_filename": "nbody_in.json"
+    },
+    "params": {
+        "x":    {"type": "float", "min": "0.0", "max": "1.0", "default": "0.680375"},
+        "y":    {"type": "float", "min": "0.0", "max": "1.0", "default": "0.596880"},
+        "z":    {"type": "float", "min": "0.0", "max": "1.0", "default": "-0.329554"},
+        "vx":   {"type": "float", "min": "0.0", "max": "1.0", "default": "0.000011"},
+        "vy":   {"type": "float", "min": "0.0", "max": "1.0", "default": "-0.000027"},
+        "vz":   {"type": "float", "min": "0.0", "max": "1.0", "default": "0.000083"},
+        "mass": {"type": "float", "min": "2000.0", "max": "4000.0", "default": "3424.807617"},
+        "out_file": {"type": "str", "default": "output.csv"}
+    }
+}
