@@ -1,0 +1,24 @@
+[
+  {
+	"request": "submit",
+	"jobs": [ {
+		"name": "__api_client_${it}",
+		"execution": {
+		  "exec": "bash",
+          "args": ["bash_mandelbrot.sh", "${it}"],
+		  "stdout": "__api_client.stdout",
+		  "stderr": "__api_client.stderr"
+		},
+		"resources": {
+		  "numCores": {
+				"min": 16,
+                "max": 18
+		  }
+		}
+	} ]
+  },
+  {
+	"request": "control",
+	"command": "finishAfterAllTasksDone"
+  }
+]
