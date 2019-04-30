@@ -3,6 +3,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include <omp.h>
+#include <sys/time.h>
+
 
 #include <json-c/json.h>
 
@@ -12,6 +14,13 @@
 #define SIZE 3000
 #endif
 
+
+double wallclock(){
+      struct timeval timer;
+      gettimeofday(&timer, NULL);
+      double time = timer.tv_sec + timer.tv_usec * 1.0E-6;
+      return time;
+}
 
 
 
@@ -236,6 +245,9 @@ static struct Object crc(void)
 
 int main(int argc, char* argv[])
 {
+
+  double t0, t1;
+  t0 = wallclock();  
   x = 200;
   int i = 0;
 
@@ -278,9 +290,12 @@ int main(int argc, char* argv[])
 
   FILE *fpout;
   fpout = fopen("output.csv", "w");
-  const char *header ="x y z vx vy vz";
+  const char *header ="Val_x,Val_y,Val_z,Val_vx,Val_vy,Val_vz";
   fprintf(fpout, "%s\n", header);
-  fprintf(fpout, "%g %g %g %g %g %g\n", crcr.x, crcr.y, crcr.y, crcr.vx, crcr.vy, crcr.vz);
+  fprintf(fpout, "%g,%g,%g,%g,%g,%g\n", crcr.x, crcr.y, crcr.y, crcr.vx, crcr.vy, crcr.vz);
   fclose(fpout);
+
+  t1 = wallclock();
+  printf("Time nBody =  %lf\n ", t1 - t0);
   return 0;
 }
