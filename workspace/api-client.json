@@ -18,6 +18,7 @@
 	} ]
   },
   {
+    "request": "resourcesInfo",
 	"request": "control",
 	"command": "finishAfterAllTasksDone"
   }

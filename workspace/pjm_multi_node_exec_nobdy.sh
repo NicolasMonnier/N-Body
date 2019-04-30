@@ -4,13 +4,17 @@
 #SBATCH -N 1
 #SBATCH -J VECMA
 #SBATCH --exclusive
+#SBATCH -c 64
+#SBATCH --nodelist genji240
+
+set -ex -o pipefail
 
 source /home_nfs_robin_ib/bmonniern/VECMA/build_PilotJobManager_gnu_8.2.0/env_bench
-source /home_nfs_robin_ib/xraffine/bin/setenv_gcc-6.4.0.sh
+
 
 cd /home_nfs_robin_ib/bmonniern/VECMA/build_PilotJobManager_gnu_8.2.0/QCG-PilotJob-master/workspace
 
-source /home_nfs_robin_ib/bmonniern/VECMA/env_bench
 export OMP_NUM_THREADS=8
 
-python3 -m qcg.appscheduler.service --net --file --file-path api-client.json --nodes 8
+python3 -m qcg.appscheduler.service --net --file --file-path api-client-nbody.json  --wd /home_nfs_robin_ib/bmonniern/VECMA/build_PilotJobManager_gnu_8.2.0/QCG-PilotJob-master/workspace
+

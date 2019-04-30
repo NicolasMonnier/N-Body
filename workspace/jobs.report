@@ -1,7 +1,0 @@
-__api_client_${it} (SUCCEED) 
-	2019-04-05 17:09:03.099298: QUEUED
-	2019-04-05 17:09:03.100251: EXECUTING
-	2019-04-05 17:09:19.055700: SUCCEED
-	allocation: genji253:18
-	wd: /home_nfs_robin_ib/bmonniern/VECMA/build_PilotJobManager_gnu_8.2.0/QCG-PilotJob-master/workspace
-	rtime: 0:00:15.949621

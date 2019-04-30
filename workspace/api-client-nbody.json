@@ -1,0 +1,30 @@
+[
+  {
+    "request": "resourcesInfo",
+	"request": "submit",
+	"jobs": [ {
+		"name": "__api_client_${it}",
+        "iterate": [ 1, 30],
+		"execution": {
+		  "exec": "bash",
+          "args": ["run_nbody.sh"],
+		  "stdout": "__api_client_${it}.stdout",
+		  "stderr": "__api_client.${ncores}.stderr"
+		},
+        "resources":{
+          "numNodes": {
+            "exact" :1
+          },
+          "numCores": {
+            "exact" : 10
+           }
+        }   
+	} ]
+  },
+  {
+
+	"request": "resourcesInfo",
+    "request": "control",
+	"command": "finishAfterAllTasksDone"
+  }
+]
